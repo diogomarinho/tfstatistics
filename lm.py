@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 import pandas as pd
+import numpy as np
 import tensorflow as tf
+from leastsquares import leastSquaresSolver, byInverse
 
 # response variabl (Y): SalePrice
 # predictors: LotArea (Numerical) LotFrontage (Numerical) Street(Categorical)
@@ -12,15 +14,16 @@ def getXYData(fin='~/tfstatistics/house_pricing_train.csv'):
     xydata.Street = xydata.Street.factorize()[0]
     return xydata
 
-def lmfit(response=None, predictors=None)
-    #TODO
-    residuals  = None
-    intercept = None
-    coefs = None
-    pvals = None
-    conf_left = None
-    conf_right = None
-    return residuals, intercept, coefs, pvals, conf_left, conf_right
+class lm:
+    def __init__(self, data, response_id):
+        self.y = data[[response_id]].values
+        self.x = data.drop([response_id], axis=1).values
+        # adding ones for the intercept
+    def fit(self, lss):
+        lss.solve(self.x, self.y)
+        return 0
 
-
+df = getXYData()
+lreg = lm(df, 'SalePrice')
+lreg.fit(byInverse())
 
