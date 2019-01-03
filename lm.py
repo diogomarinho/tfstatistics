@@ -10,7 +10,7 @@ from leastsquares import leastSquaresSolver, byInverse
 #
 def getXYData(fin='~/tfstatistics/house_pricing_train.csv'):
     df = pd.read_csv(fin)
-    xydata = df['SalePrice LotArea'.split()]
+    xydata = df['SalePrice LotArea LotFrontage'.split()]
     xydata = xydata.dropna(axis=0)
     #xydata.Street = xydata.Street.factorize()[0]
     # xydata.Street.cat.codes.values
@@ -29,4 +29,6 @@ class lm:
 df = getXYData()
 lreg = lm(df, 'SalePrice')
 print(lreg.fit(byInverse()))
+
+
 
