@@ -5,6 +5,13 @@ class leastSquaresSolver(ABC):
     @abstractmethod
     def solve(self, X, Y):
         print('Solving least squares')
+    def residuals(self):
+        pass
+    @classmethod
+    def pvals(self):
+        return('TODO')
+    def confints(self):
+        return ('TODO')
 
 class byNormalEquation(leastSquaresSolver):
     # this has the same effect of :
@@ -20,8 +27,18 @@ class byNormalEquation(leastSquaresSolver):
         # solve L^t . x = z --->  x =  Lˆt' * z
         return np.linalg.inv(l.T).dot(z)
 
-#
+# phillippe assignment
 class byGradientDescent(leastSquaresSolver):
     def solve(self, X, Y):
         # todo
         super().solve(X,Y)
+
+class byQRFactorization(leastSquaresSolver):
+    def solve(self, X, Y):
+        #TODO
+        return
+
+class bySVD(leastSquaresSolver):
+    def solve(self, X, Y):
+        #TODO
+        return

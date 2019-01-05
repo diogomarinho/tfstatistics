@@ -16,6 +16,7 @@ def getXYData(fin='~/tfstatistics/house_pricing_train.csv'):
     # xydata.Street.cat.codes.values
     return xydata
 #
+# class for linear regression model
 class lm:
     def __init__(self, data, response_id):
         self.y = data[[response_id]].values
@@ -28,9 +29,11 @@ class lm:
 #
 # example
 df = getXYData()
+solver = byNormalEquation()
 lreg = lm(df, 'SalePrice')
-print('Coefficients: \n{}'.format(lreg.fit(byNormalEquation())))
-
+print('Coefficients: \n{}'.format(lreg.fit(solver)))
+print(solver.pvals())
+print(solver.)
 
 
 
