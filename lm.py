@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-from leastsquares import leastSquaresSolver, byInverse
+from leastsquares import leastSquaresSolver, byNormalEquation
 
 # response variabl (Y): SalePrice
 # predictors: LotArea (Numerical) LotFrontage (Numerical) Street(Categorical)
@@ -29,8 +29,8 @@ class lm:
 # example
 df = getXYData()
 lreg = lm(df, 'SalePrice')
-print('RANK of x: {}'.format(np.linalg.matrix_rank(lreg.x)))
-print(lreg.fit(byInverse()))
+print('Coefficients: \n{}'.format(lreg.fit(byNormalEquation())))
+
 
 
 

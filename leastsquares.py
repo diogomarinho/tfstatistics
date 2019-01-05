@@ -5,14 +5,21 @@ class leastSquaresSolver(ABC):
     @abstractmethod
     def solve(self, X, Y):
         print('Solving least squares')
-#
-class byNormalEquations(leastSquaresSolver):
+
+class byNormalEquation(leastSquaresSolver):
+    # this has the same effect of :
+    # (X_T . X )' * (X_T . Y)
     def solve(self, X, Y):
-        X_T = X.T
-        super().solve(X, Y)
-        Xprod = np.dot(X_T, X)
-        Yprod = np.dot(X_T, Y)
-        return np.dot(np.linalg.inv(Xprod), Yprod)
+        x_t = X.T
+        xprod = x_t.dot(X)
+        l = np.linalg.cholesky(xprod)
+        d = x_t.dot(Y)
+        # print(d.shape)
+        # solve L . z = d  ---->  z = L' * d
+        z = np.linalg.inv(l).dot(d)
+        # solve L^t . x = z --->  x =  Lˆt' * z
+        return np.linalg.inv(l.T).dot(z)
+
 #
 class byGradientDescent(leastSquaresSolver):
     def solve(self, X, Y):
