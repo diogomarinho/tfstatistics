@@ -24,10 +24,12 @@ class lm:
     # .
     def fit(self, lss):
         return lss.solve(self.x, self.y)
+
 #
 # example
 df = getXYData()
 lreg = lm(df, 'SalePrice')
+print('RANK of x: {}'.format(np.linalg.matrix_rank(lreg.x)))
 print(lreg.fit(byInverse()))
 
 

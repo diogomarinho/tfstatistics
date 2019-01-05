@@ -6,11 +6,12 @@ class leastSquaresSolver(ABC):
     def solve(self, X, Y):
         print('Solving least squares')
 #
-class byInverse(leastSquaresSolver):
+class byNormalEquations(leastSquaresSolver):
     def solve(self, X, Y):
+        X_T = X.T
         super().solve(X, Y)
-        Xprod = np.dot(X.T, X)
-        Yprod = np.dot(X.T, Y)
+        Xprod = np.dot(X_T, X)
+        Yprod = np.dot(X_T, Y)
         return np.dot(np.linalg.inv(Xprod), Yprod)
 #
 class byGradientDescent(leastSquaresSolver):
