@@ -33,10 +33,13 @@ class byGradientDescent(leastSquaresSolver):
         # todo
         super().solve(X,Y)
 
+# columns of X must be linearly independent
 class byQRFactorization(leastSquaresSolver):
     def solve(self, X, Y):
-        #TODO
-        return
+        # QR factorization
+        q, r = np.linalg.qr(X)
+        coef = np.linalg.inv(r).dot(q.T.dot(Y))
+        return coef
 
 class bySVD(leastSquaresSolver):
     def solve(self, X, Y):
