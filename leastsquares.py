@@ -38,10 +38,11 @@ class byQRFactorization(leastSquaresSolver):
     def solve(self, X, Y):
         # QR factorization
         q, r = np.linalg.qr(X)
-        coef = np.linalg.inv(r).dot(q.T.dot(Y))
-        return coef
+        return np.linalg.inv(r).dot(q.T.dot(Y))
 
+# lazy solution =P
 class bySVD(leastSquaresSolver):
     def solve(self, X, Y):
-        #TODO
-        return
+        # solves the pseudo inverse which is the whole point of use SVD to compute least squares
+        x_plus = np.linalg.pinv(X)
+        return(x_plus.dot(Y))

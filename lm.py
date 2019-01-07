@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-from leastsquares import leastSquaresSolver, byNormalEquation, byQRFactorization
+from leastsquares import leastSquaresSolver, byNormalEquation, byQRFactorization, bySVD
 
 # response variabl (Y): SalePrice
 # predictors: LotArea (Numerical) LotFrontage (Numerical) Street(Categorical)
@@ -31,10 +31,12 @@ class lm:
 df = getXYData()
 qr = byQRFactorization()
 nr = byNormalEquation()
+svd = bySVD()
+#
 lreg = lm(df, 'SalePrice')
 print('Coefficients: \n{}'.format(lreg.fit(qr)))
 print('Coefficients: \n{}'.format(lreg.fit(nr)))
-
+print('Coefficients: \n{}'.format(lreg.fit(svd)))
 
 
 
