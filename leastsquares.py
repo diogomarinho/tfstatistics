@@ -5,13 +5,6 @@ class leastSquaresSolver(ABC):
     @abstractmethod
     def solve(self, X, Y):
         print('Solving least squares')
-    def residuals(self):
-        pass
-    @classmethod
-    def pvals(self):
-        return('TODO')
-    def confints(self):
-        return ('TODO')
 
 class byNormalEquation(leastSquaresSolver):
     # this has the same effect of :
@@ -31,13 +24,14 @@ class byNormalEquation(leastSquaresSolver):
 class byGradientDescent(leastSquaresSolver):
     def solve(self, X, Y):
         # todo
-        super().solve(X,Y)
+        return 'NOT IMPLEMENTED'
 
 # columns of X must be linearly independent
 class byQRFactorization(leastSquaresSolver):
     def solve(self, X, Y):
         # QR factorization
         q, r = np.linalg.qr(X)
+        # coefficients
         return np.linalg.inv(r).dot(q.T.dot(Y))
 
 # lazy solution =P
