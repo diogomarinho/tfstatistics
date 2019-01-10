@@ -27,25 +27,43 @@ class lm:
         self.x = np.column_stack((self.x, np.ones(shape=(self.x.shape[0]))))
     # .
     def fit(self, lss):
-        # coefficients calculation
-        self.coefs = lss.solve(self.x, self.y)
-        # estimates
+        # . coefficients calculation
+        self.coefs, self.corr = lss.solve(self.x, self.y)
+        # . coefficients correlation
+        #
+        # . estimates
         yhat = self.x.dot(self.coefs)
-        # residuals
+        #
+        # . residuals
         self.res = self.y - yhat
-        # squared residuals
+        #
+        # . residual sum of     squares |(sum((yhat - y)**2)|
         self.rss = self.res.T.dot(self.res)
-        # degree's of freedom n - (p + 1(intercept is already stacked))
+        #
+        # . total sum of squares  |sum((y - yean)^2)|
+        y_mean = np.mean(self.y)
+        self.tss = np.sum((self.y - y_mean)**2)
+        #
+        # . regression sum squares
+        self.regSS = self.tss - self.rss
+        #
+        # . r2 (r-squared)
+        self.r2 = self.tss - self.rss
+        #
+        # . degree's of freedom n - (p + 1(intercept is already stacked))
         self.df = self.x.shape[0] - self.x.shape[1]
-        # standard deviation
-        self.sigma2 = self.rss/self.df
-        # x standard deviation
-        xmean = np.mean(self.x, axis=0)
-        xsd = np.sum((self.x - xmean)**2, axis=0)
-        # pvalues
+        #
+        # . residual standard error
+        se = np.sqrt(self.rss/self.df)
+        # .
+        # . #
+        # self.sigma2 = self.rss/self.df
+        # standard errors
+        # xmean = np.mean(self.x, axis=0)
+        # xsd = np.sum((self.x - xmean)**2, axis=0)
+        # p-values
         # pvals
         #confidence intervals
-        return self.coefs
     # .
 # .
 # example
@@ -58,8 +76,24 @@ svd = bySVD()
 lreg = lm(df, 'SalePrice')
 # . fitting multiple lienar regression:
 lreg.fit(qr)
-print('Coefficients: \n{}'.format(lreg.coefs))
-print('min res: {MIN}; max res: {MAX}'.format(MIN=np.min(lreg.res), MAX=np.max(lreg.res)))
+print(lreg.corr)
+#
+lreg.fit(nr)
+print(lreg.corr)
+#
+lreg.fit(svd)
+print(lreg.corr)
+
+#print('Coefficients: \n{}'.format(lreg.coefs))
+#print('min res: {MIN}; max res: {MAX}'.format(MIN=np.min(lreg.res), MAX=np.max(lreg.res)))
+#lreg.fit(nr)
+#lreg.fit(svd)
+#lreg.fit(qr)
+from scipy import stats
+#x = lreg.x
+#y = lreg.y
+
+#slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
 
 #
 # .
@@ -70,5 +104,3 @@ print('min res: {MIN}; max res: {MAX}'.format(MIN=np.min(lreg.res), MAX=np.max(l
 
 # lreg.fit(svd)
 #print('Coefficients: \n{}'.format(lreg.coefs))
-
-
