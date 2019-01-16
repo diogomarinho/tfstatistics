@@ -1,11 +1,14 @@
 import numpy as np
 from abc import ABC, abstractmethod
 
+# .
 class leastSquaresSolver(ABC):
+    # returns the coefficients and the product (X'X)^1
     @abstractmethod
     def solve(self, X, Y):
         print('Solving least squares')
-
+        return None, None
+# .
 class byNormalEquation(leastSquaresSolver):
     # this has the same effect of :
     # (X_T . X )' * (X_T . Y)
@@ -20,13 +23,13 @@ class byNormalEquation(leastSquaresSolver):
         # solve L^t . x = z --->  x =  Lˆt' * z
         return (np.linalg.inv(l.T).dot(z), np.linalg.inv(l.dot(l.T)))
 
-# phillippe assignment
+# . phillippe assignment
 class byGradientDescent(leastSquaresSolver):
     def solve(self, X, Y):
         # todo
         return 'NOT IMPLEMENTED'
 
-# columns of X must be linearly independent
+# . columns of X must be linearly independent
 class byQRFactorization(leastSquaresSolver):
     def solve(self, X, Y):
         # QR factorization
@@ -34,13 +37,18 @@ class byQRFactorization(leastSquaresSolver):
         # coefficients
         return (np.linalg.inv(r).dot(q.T.dot(Y)), np.linalg.inv(np.dot(r.T, r)))
 
-# SVD
+# . SVD
 class bySVD(leastSquaresSolver):
     def solve(self, X, Y):
-        u, s, v = np.linalg.svd(X, full_matrices=False)
-        X_ = u.dot(np.diag(s)).dot(v)
-        n = X.shape[1]
-        r = np.linalg.matrix_rank(X)
-        sigma_inv = np.diag(np.hstack([1 / s[:r], np.zeros(n - r)]))
-        X_plus = v.dot(sigma_inv).dot(u.T)
-        return(X_plus.dot(Y), np.linalg.inv(X_.T.dot(X_)))
+        rcond = np.asarray(1e-15)
+        u, s, vt = np.linalg.svd(X, full_matrices=False)
+        # discard small singular values
+        cutoff = rcond[..., np.newaxis] * np.amax(s, axis=-1, keepdims=True)
+        large = s > cutoff
+        s = np.divide(1, s, where=large, out=s)
+        s[~large] = 0
+        # pseudo-inverse
+        res = np.dot(np.transpose(vt), np.multiply(s[:, np.core.newaxis], np.transpose(u)))
+        # res = np.matmul(np.transpose(vt), np.multiply(s[..., np.newaxis], np.transpose(u)))
+        return res.dot(Y),  np.dot(res, np.transpose(res))
+#
