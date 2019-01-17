@@ -34,8 +34,10 @@ class byQRFactorization(leastSquaresSolver):
     def solve(self, X, Y):
         # QR factorization
         q, r = np.linalg.qr(X)
-        # coefficients
-        return (np.linalg.inv(r).dot(q.T.dot(Y)), np.linalg.inv(np.dot(r.T, r)))
+        # from stats model
+        return (np.linalg.solve(r, q.T.dot(Y)), np.linalg.inv(np.dot(r.T, r)))
+        # my old version
+        #return (np.linalg.inv(r).dot(q.T.dot(Y)), np.linalg.inv(np.dot(r.T, r)))
 
 # . SVD
 class bySVD(leastSquaresSolver):
