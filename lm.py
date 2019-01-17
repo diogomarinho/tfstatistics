@@ -83,104 +83,106 @@ class lm:
         # p-values
         # pvals
         #confidence intervals
-# example
-df = getXYData()
-# .
-qr = byQRFactorization()
-nr = byNormalEquation()
-svd = bySVD()
-# .
-lreg = lm(df, 'SalePrice')
-# . fitting multiple lienar regression:
-#lreg.fit(qr)
-#print(lreg.p_values)
-#
-#lreg.fit(nr)
-#print(lreg.p_values)
-#
-lreg.fit(svd)
-#print(np.round(lreg.p_values, 6))
+
+if __name__ == '__main__':
+    # example
+    df = getXYData()
+    # .
+    qr = byQRFactorization()
+    nr = byNormalEquation()
+    svd = bySVD()
+    # .
+    lreg = lm(df, 'SalePrice')
+    # . fitting multiple lienar regression:
+    #lreg.fit(qr)
+    #print(lreg.p_values)
+    #
+    #lreg.fit(nr)
+    #print(lreg.p_values)
+    #
+    lreg.fit(svd)
+    #print(np.round(lreg.p_values, 6))
 
 
-# .
-#print('Coefficients: \n{}'.format(lreg.coefs))
-#print('min res: {MIN}; max res: {MAX}'.format(MIN=np.min(lreg.res), MAX=np.max(lreg.res)))
-#lreg.fit(nr)
-#lreg.fit(svd)
-#lreg.fit(qr)
-#from scipy import stats
-#x = lreg.x
-#y = lreg.y
+    # .
+    #print('Coefficients: \n{}'.format(lreg.coefs))
+    #print('min res: {MIN}; max res: {MAX}'.format(MIN=np.min(lreg.res), MAX=np.max(lreg.res)))
+    #lreg.fit(nr)
+    #lreg.fit(svd)
+    #lreg.fit(qr)
+    #from scipy import stats
+    #x = lreg.x
+    #y = lreg.y
 
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
-mod = smf.ols(formula='SalePrice ~ LotArea + LotFrontage', data=df)
-#mod = sm.OLS(lreg.y, lreg.x)
-# .
-res = mod.fit()
-print(res.pvalues)
-#
-print('------ tf-stats X statsmodel -----------')
-coefs = lreg.coefs.reshape(-1)
-pvals = lreg.p_values
-coefs_ = res.params
-pvals_ = res.pvalues
-# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . s
-print('pvalues')
-print('{A:15.20f} {B:15.20f} -- {S}'.format(A=pvals[0], B=pvals_[0], S=pvals[0] == pvals_[0]))
-print('{A:15.20f} {B:15.20f} -- {S}'.format(A=pvals[1], B=pvals_[1], S=pvals[1] == pvals_[1])) # getts different after 16 digits after the decimal place ??
-print('{A:15.20f} {B:15.20f} -- {S}'.format(A=pvals[2], B=pvals_[2], S=pvals[2] == pvals_[2])) # getts different after 16 digits after the decimal place ??
-print('Coeffcients:')
-print('{A:15.8f} {B:15.8f} -- {S}'.format(A=coefs[0], B=coefs_[0], S=coefs[0] == coefs_[0]))
-print('{A:15.8f} {B:15.8f} -- {S}'.format(A=coefs[1], B=coefs_[1], S=coefs[1] == coefs_[1]))
-print('{A:15.8f} {B:15.8f} -- {S}'.format(A=coefs[2], B=coefs_[2], S=coefs[2] == coefs_[2]))
-#
-print('standard errors')
-bse = lreg.sd_b
-print('{A:15.8f} {B:15.8f} -- {S}'.format(A=bse[0], B=res.bse[0], S=bse[0] == res.bse[0]))
-print('{A:15.8f} {B:15.8f} -- {S}'.format(A=bse[1], B=res.bse[1], S=bse[1] == res.bse[1]))
-print('{A:15.8f} {B:15.8f} -- {S}'.format(A=bse[2], B=res.bse[2], S=bse[2] == res.bse[2]))
-#
-print('t-values')
-ts = lreg.ts_b
-print('{A:15.8f} {B:15.8f} -- {S}'.format(A=ts[0], B=res.tvalues[0], S=ts[0] == res.tvalues[0]))
-print('{A:15.8f} {B:15.8f} -- {S}'.format(A=ts[1], B=res.tvalues[1], S=ts[1] == res.tvalues[1]))
-print('{A:15.8f} {B:15.8f} -- {S}'.format(A=ts[2], B=res.tvalues[2], S=ts[2] == res.tvalues[2]))
-# .
+    import statsmodels.api as sm
+    import statsmodels.formula.api as smf
+    mod = smf.ols(formula='SalePrice ~ LotArea + LotFrontage', data=df)
+    #mod = sm.OLS(lreg.y, lreg.x)
+    # .
+    res = mod.fit()
+    print(res.pvalues)
+    #
+    print('------ tf-stats X statsmodel -----------')
+    coefs = lreg.coefs.reshape(-1)
+    pvals = lreg.p_values
+    coefs_ = res.params
+    pvals_ = res.pvalues
+    # . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . s
+    print('pvalues')
+    print('{A:15.20f} {B:15.20f} -- {S}'.format(A=pvals[0], B=pvals_[0], S=pvals[0] == pvals_[0]))
+    print('{A:15.20f} {B:15.20f} -- {S}'.format(A=pvals[1], B=pvals_[1], S=pvals[1] == pvals_[1])) # getts different after 16 digits after the decimal place ??
+    print('{A:15.20f} {B:15.20f} -- {S}'.format(A=pvals[2], B=pvals_[2], S=pvals[2] == pvals_[2])) # getts different after 16 digits after the decimal place ??
+    print('Coeffcients:')
+    print('{A:15.8f} {B:15.8f} -- {S}'.format(A=coefs[0], B=coefs_[0], S=coefs[0] == coefs_[0]))
+    print('{A:15.8f} {B:15.8f} -- {S}'.format(A=coefs[1], B=coefs_[1], S=coefs[1] == coefs_[1]))
+    print('{A:15.8f} {B:15.8f} -- {S}'.format(A=coefs[2], B=coefs_[2], S=coefs[2] == coefs_[2]))
+    #
+    print('standard errors')
+    bse = lreg.sd_b
+    print('{A:15.8f} {B:15.8f} -- {S}'.format(A=bse[0], B=res.bse[0], S=bse[0] == res.bse[0]))
+    print('{A:15.8f} {B:15.8f} -- {S}'.format(A=bse[1], B=res.bse[1], S=bse[1] == res.bse[1]))
+    print('{A:15.8f} {B:15.8f} -- {S}'.format(A=bse[2], B=res.bse[2], S=bse[2] == res.bse[2]))
+    #
+    print('t-values')
+    ts = lreg.ts_b
+    print('{A:15.8f} {B:15.8f} -- {S}'.format(A=ts[0], B=res.tvalues[0], S=ts[0] == res.tvalues[0]))
+    print('{A:15.8f} {B:15.8f} -- {S}'.format(A=ts[1], B=res.tvalues[1], S=ts[1] == res.tvalues[1]))
+    print('{A:15.8f} {B:15.8f} -- {S}'.format(A=ts[2], B=res.tvalues[2], S=ts[2] == res.tvalues[2]))
+    # .
 
-# print('{A:15.8f} {B:15.8f} -- {S}'.format(A=pvals[0], B=pvals_[1], S=pvals[0] == pvals_[1]))
-# print('{A:15.8f} {B:15.8f} -- {S}'.format(A=pvals[1], B=pvals_[2], S=pvals[1] == pvals_[2]))
-# print('{A:15.8f} {B:15.8f} -- {S}'.format(A=pvals[2], B=pvals_[0], S=pvals[2] == pvals_[0]))
-# print('Coeffcients:')
-# print('{A:15.8f} {B:15.8f} -- {S}'.format(A=coefs[0], B=coefs_[1], S=coefs[0] == coefs_[1]))
-# print('{A:15.8f} {B:15.8f} -- {S}'.format(A=coefs[1], B=coefs_[2], S=coefs[1] == coefs_[2]))
-# print('{A:15.8f} {B:15.8f} -- {S}'.format(A=coefs[2], B=coefs_[0], S=coefs[2] == coefs_[0]))
+    # print('{A:15.8f} {B:15.8f} -- {S}'.format(A=pvals[0], B=pvals_[1], S=pvals[0] == pvals_[1]))
+    # print('{A:15.8f} {B:15.8f} -- {S}'.format(A=pvals[1], B=pvals_[2], S=pvals[1] == pvals_[2]))
+    # print('{A:15.8f} {B:15.8f} -- {S}'.format(A=pvals[2], B=pvals_[0], S=pvals[2] == pvals_[0]))
+    # print('Coeffcients:')
+    # print('{A:15.8f} {B:15.8f} -- {S}'.format(A=coefs[0], B=coefs_[1], S=coefs[0] == coefs_[1]))
+    # print('{A:15.8f} {B:15.8f} -- {S}'.format(A=coefs[1], B=coefs_[2], S=coefs[1] == coefs_[2]))
+    # print('{A:15.8f} {B:15.8f} -- {S}'.format(A=coefs[2], B=coefs_[0], S=coefs[2] == coefs_[0]))
 
-#
-#print(df.shape)
-#print(lreg.x.shape)
-#print(res.summary())
-#
-#print(np.sum(lreg.res.reshape(-1)) == np.sum(res.resid))
-#print(np.sum(lreg.res.reshape(-1)))
-#print(np.sum(res.resid))
-#print(res.resid)
-#print(res.params)
-#print('----')
-#p = [ '{0:0.6f}'.format(i) for i in lreg.res.reshape(-1)]
-#print('\n'.join(p))
-#print(lreg.res.reshape(-1))
-#print(res.pvalues)
-#print(res.summary())
-#print(res.#)
-#slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+    #
+    #print(df.shape)
+    #print(lreg.x.shape)
+    #print(res.summary())
+    #
+    #print(np.sum(lreg.res.reshape(-1)) == np.sum(res.resid))
+    #print(np.sum(lreg.res.reshape(-1)))
+    #print(np.sum(res.resid))
+    #print(res.resid)
+    #print(res.params)
+    #print('----')
+    #p = [ '{0:0.6f}'.format(i) for i in lreg.res.reshape(-1)]
+    #print('\n'.join(p))
+    #print(lreg.res.reshape(-1))
+    #print(res.pvalues)
+    #print(res.summary())
+    #print(res.#)
+    #slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
 
-#
-# .
-# . .
-# . . .
-# . . . . lreg.fit(nr)
-#print('Coefficients: \n{}'.format(lreg.coefs))
+    #
+    # .
+    # . .
+    # . . .
+    # . . . . lreg.fit(nr)
+    #print('Coefficients: \n{}'.format(lreg.coefs))
 
-# lreg.fit(svd)
-#print('Coefficients: \n{}'.format(lreg.coefs))
+    # lreg.fit(svd)
+    #print('Coefficients: \n{}'.format(lreg.coefs))
