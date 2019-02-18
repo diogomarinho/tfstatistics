@@ -1,5 +1,28 @@
 import numpy as np
 from abc import ABC, abstractmethod
+import tensorflow as tf
+
+# . . . . . . . . . . .  . . . . . .
+# class to solve the least squares using tensorflow api
+class TFLeastSquaresSolver(ABC):
+    def get_as_tensors(self, X, Y):
+        tf_x = tf.placeholder(dtype=tf.float32, shape=X.shape)
+        tf_y = tf.placeholder(dtype=tf.float32, shape=Y.shape)
+        return tf_x, tf_y
+    @abstractmethod
+    def solve(self, X, Y):
+        pass
+
+class TFNormalEquations(TFLeastSquaresSolver):
+    def solve(self, X, Y):
+        x, y = self.get_as_tensors(X, Y)
+        x_t = tf.transpose(x)
+        covar_parameters = tf.matrix_inverse(tf.matmul(tf.transpose(x), x))
+        theta = tf.matmul(covar_parameters, tf.matmul(tf.transpose(x), y))
+        with tf.Session() as sess:
+            results = sess.run([covar_parameters, theta], feed_dict={x:X, y:Y})
+        import pdb; pdb.set_trace()
+        return results
 
 # .
 class leastSquaresSolver(ABC):
@@ -20,7 +43,7 @@ class byNormalEquation(leastSquaresSolver):
         # print(d.shape)
         # solve L . z = d  ---->  z = L' * d
         z = np.linalg.inv(l).dot(d)
-        # solve L^t . x = z --->  x =  Lˆt' * z
+        # solve L^t . x = z --->  x =  L^t' * z
         return (np.linalg.inv(l.T).dot(z), np.linalg.inv(l.dot(l.T)))
 
 # . phillippe assignment
