@@ -12,26 +12,29 @@ np.set_printoptions(suppress=True)
 # predictors: LotArea (Numerical) LotFrontage (Numerical) Street(Categorical)
 # example data to develop the linear regression method
 
+
 #def getXYData(fin='~/tfstatistics/house_pricing_train.csv'):
 def getXYData(fin='~/projects/tfstatistics/test_data.csv'):
     df = pd.read_csv(fin)
     df = df.dropna(0)
     return df
-# .
+
+
 # class for linear regression model .
 class lm:
+    #
     def __init__(self, data, response_id):
         self.y = data[[response_id]].values
         self.x = data.drop([response_id], axis=1).values
         self.x = np.column_stack((np.ones(shape=(self.x.shape[0])), self.x))
-    # .
+
+    # . perform the computation
     def fit(self, lss):
         # . coefficients calculation
         self.coefs, self.corr = lss.solve(self.x, self.y)
-
-        #self.bse = np.sqrt(np.diag(self.corr))
-        #print(self.corr)
-        # . coefficients correlation
+        # self.bse = np.sqrt(np.diag(self.corr))
+        # print(self.corr)
+        # . coeffi++cients correlation
         #
         # . estimates
         yhat = self.x.dot(self.coefs)
@@ -87,6 +90,13 @@ if __name__ == '__main__':
     theta, covar_params = tf_neq.solve(lreg.x, lreg.y)
     print(covar_params)
     print(theta)
+
+    import statsmodels.api as sm
+    x = df['LotArea LotFrontage'.split()].values
+    y = df.SalePrice.values
+    x = sm.add_constant(x)
+    mod = sm.GLM(y, x, family=sm.families.Gaussian()).fit()
+    print(mod.summary())
     '''
     import statsmodels.api as sm
     import statsmodels.formula.api as smf

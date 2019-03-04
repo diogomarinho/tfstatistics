@@ -1,6 +1,22 @@
 import numpy as np
 from abc import ABC, abstractmethod
 import tensorflow as tf
+from tensorflow.python.training import optimizer
+
+# class TFAssociationTestOpt: in high dimension data it's very common
+# to treat the features independently. This means that the number of regression
+# models performed  are equal to the number of features: this happens in most
+# GWAS and EWAS study where the number of regressions modles goes to 1 000 000
+# to 11 000 000, which still a small fraction of the entire human genome.
+# This tests can be paralellized to obtain faster computation. tensorflow
+# already provide all matrix operations necessary to implement inverse matrix
+# methods for estimating standard errors and coefficients and, more important,
+# has all GPU interface embeeded in its code, allowing potentially very fast,
+# calculations.
+
+class TFAssociationTestOptimizer(optimizer.Optimizer):
+    def __init__(self, X, Y, use_locking=False, name="PowerSign"):
+        super(TFAssociationTestOptimizer, use_locking, name)
 
 # . . . . . . . . . . .  . . . . . .
 # class to solve the least squares using tensorflow api
@@ -21,7 +37,7 @@ class TFNormalEquations(TFLeastSquaresSolver):
         theta = tf.matmul(covar_parameters, tf.matmul(tf.transpose(x), y))
         with tf.Session() as sess:
             results = sess.run([covar_parameters, theta], feed_dict={x:X, y:Y})
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         return results
 
 # .
@@ -46,11 +62,6 @@ class byNormalEquation(leastSquaresSolver):
         # solve L^t . x = z --->  x =  L^t' * z
         return (np.linalg.inv(l.T).dot(z), np.linalg.inv(l.dot(l.T)))
 
-# . phillippe assignment
-class byGradientDescent(leastSquaresSolver):
-    def solve(self, X, Y):
-        # todo
-        return 'NOT IMPLEMENTED'
 
 # . columns of X must be linearly independent
 class byQRFactorization(leastSquaresSolver):
@@ -60,7 +71,7 @@ class byQRFactorization(leastSquaresSolver):
         # from stats model
         return (np.linalg.solve(r, q.T.dot(Y)), np.linalg.inv(np.dot(r.T, r)))
         # my old version
-        #return (np.linalg.inv(r).dot(q.T.dot(Y)), np.linalg.inv(np.dot(r.T, r)))
+        # return np.linalg.inv(r).dot(q.T.dot(Y)),np.linalg.inv(np.dot(r.T,r))
 
 # . SVD
 class bySVD(leastSquaresSolver):
