@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 import statsmodels.api as sm
+from scipy.sparse import dia_matrix
 # import scipy as sp
 # implementation of newthon's method to solve the MLE
 # of y~Binominal(logit(x))
@@ -56,19 +57,25 @@ if __name__ == '__main__':
     X = np.copy(x)
     max_iter = 15
     np.random.seed(2019)
-    # theta = np.random.rand(X.shape[1])
-    theta = np.zeros(X.shape[1])
-
-    for i in range(max_iter):
-        # print('iteration: {}'.format(i))
-        alpha = getAlpha(x, theta)
-        G = X.T.dot(alpha.T) # gradient .
-        S = np.diag(alpha * (1.0 - alpha)) # diganoal matrix
-        H = X.T.dot(S).dot(X)
-        # first way
-        # d = np.linalg.solve(H, -G)
-        theta -= np.linalg.inv(H).dot(G)
-        # theta += 0.1 * d
-        #import pdb; pdb.set_trace()
-    print('Mine:')
-    print(theta.reshape(-1))
+    n,p = X.shape
+    W = dia_matrix((n,n))        # W is initialized
+    beta = np.linalg.lstsq(X, Y.reshape(-1,1))[0].reshape(-1)
+    # import pdb; pdb.set_trace()
+    # IRLS
+    for iter in range(max_iter):
+        pi = sigmoid(beta.T.dot(X.T)).reshape(-1)                # Evaluate the probabilities
+        # W.setdiag(pi * (1 - pi)) # Set the diagonal
+        W = np.diag(pi * (1 - pi))
+        # Updating beta
+        H = X.T.dot(W).dot(X)
+        beta_star = beta + np.linalg.inv(H).dot(X.T).dot(y - pi)
+        # Check for convergence
+        error = max(abs((beta_star - beta)/beta_star))
+        if error < 1e-10:
+            print("Convergence reached after",iter+1,"iterations")
+            break
+        # If the convergence criterium is not satisfied, continue
+        beta = beta_star
+    print("Maximum iteration reached without convergence")
+    print('mine beta')
+    print(beta)
