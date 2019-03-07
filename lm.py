@@ -60,7 +60,8 @@ class lm:
         # t-value of the coefficients
         self.ts_b = self.coefs.reshape(-1)/self.sd_b.reshape(-1)
         # computing p-values from the t-distribution
-        self.p_values =  [2*(1-stats.t.cdf(np.abs(i), self.df)) for i in self.ts_b]
+        # self.p_values =  [2*(1-stats.t.cdf(np.abs(i), self.df)) for i in self.ts_b]
+        self.p_values =  2.0 * stats.norm.cdf(-np.abs(self.ts_b))
         #
         # . total sum of squares  |sum((y - yean)^2)|
         y_mean = np.mean(self.y)
@@ -85,18 +86,19 @@ if __name__ == '__main__':
     # .
     lreg = lm(df, 'SalePrice')
     # import pdb; pdb.set_trace()
-    #lreg.fit(svd)
-    tf_neq = TFNormalEquations()
-    theta, covar_params = tf_neq.solve(lreg.x, lreg.y)
-    print(covar_params)
-    print(theta)
-
+    lreg.fit(qr)
+    print('pvaleus mine {}'.format(lreg.p_values[0]))
+    # tf_neq = TFNormalEquations()
+    # theta, covar_params = tf_neq.solve(lreg.x, lreg.y)
+    # print(covar_params)
+    # print(theta)
     import statsmodels.api as sm
-    x = df['LotArea LotFrontage'.split()].values
+    x = df['LotFrontage LotArea'.split()].values
     y = df.SalePrice.values
     x = sm.add_constant(x)
     mod = sm.GLM(y, x, family=sm.families.Gaussian()).fit()
-    print(mod.summary())
+    print('pvalues statsmodel: {}'.format(mod.pvalues[0]))
+    import pdb; pdb.set_trace()
     '''
     import statsmodels.api as sm
     import statsmodels.formula.api as smf

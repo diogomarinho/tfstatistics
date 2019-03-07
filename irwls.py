@@ -57,19 +57,21 @@ if __name__ == '__main__':
     X = np.copy(x)
     max_iter = 15
     np.random.seed(2019)
-    n,p = X.shape
-    W = dia_matrix((n,n))        # W is initialized
+    n, p = X.shape
+    W = dia_matrix((n,n)) # W is initialized
     beta = np.linalg.lstsq(X, Y.reshape(-1,1))[0].reshape(-1)
     # import pdb; pdb.set_trace()
     # IRLS
     for iter in range(max_iter):
-        pi = sigmoid(beta.T.dot(X.T)).reshape(-1)                # Evaluate the probabilities
+        pi = sigmoid(beta.T.dot(X.T)).reshape(-1)   # Evaluate the probabilities
         # W.setdiag(pi * (1 - pi)) # Set the diagonal
         W = np.diag(pi * (1 - pi))
         # Updating beta
         H = X.T.dot(W).dot(X)
-        beta_star = beta + np.linalg.inv(H).dot(X.T).dot(y - pi)
+        G = X.T.dot(y-pi)
+        beta_star = beta + np.linalg.inv(H).dot(G)
         # Check for convergence
+        import pdb; pdb.set_trace()
         error = max(abs((beta_star - beta)/beta_star))
         if error < 1e-10:
             print("Convergence reached after",iter+1,"iterations")
@@ -79,3 +81,4 @@ if __name__ == '__main__':
     print("Maximum iteration reached without convergence")
     print('mine beta')
     print(beta)
+    print(H)
